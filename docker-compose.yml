@@ -1,0 +1,17 @@
+services:
+  professionals-for-christ:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: 
+      .env
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - shared_local_network
+
+networks:
+  shared_local_network:
+    external: true

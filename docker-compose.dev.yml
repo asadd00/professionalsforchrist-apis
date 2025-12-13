@@ -1,0 +1,19 @@
+services:
+  professionals-for-christ:
+    build: .
+    ports:
+      - "3003:3003"
+      - "9300:9300"
+    env_file: 
+      .env
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - shared_local_network
+    command: npm run start:dev
+
+networks:
+  shared_local_network:
+    external: true
