@@ -1,5 +1,6 @@
 generator client {
     provider = "prisma-client-js"
+    binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 
@@ -20,5 +21,97 @@ model User {
 
     createdAt       DateTime  @default(now())
     updatedAt       DateTime  @updatedAt
+   
+   
     deletedAt       DateTime?
+
+    @@map("user")
+}
+
+model Professional {
+    id                          Int @id @default(autoincrement())
+    registerFor                 RegisterFor
+    name                        String
+    email                       String
+    contactNumber               String
+    shouldNumberVisible         Boolean
+    gender                      Gender
+    churchName                  String
+    churchArea                  String
+    city                        String
+    lastEducationId             Int
+    lastDegreeName              String
+    lastInstituteAttended       String
+    isEmployed                  Boolean
+    occupation                  String
+    industryId                  Int
+    jobTitle                    String?
+    employer                    String?
+    residentialAddress          String
+    residentialArea             String
+    linkedInUrl                 String?
+    notes                       String?
+
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    deletedAt       DateTime?
+
+    education      Education      @relation(fields: [lastEducationId], references: [id])
+    industry       Industry       @relation(fields: [industryId], references: [id])
+
+    @@map("professional")
+}
+
+model Education {
+    id          Int @id @default(autoincrement())
+    name        String
+    isActive    Boolean @default(true)
+
+    professional    Professional[]
+
+    @@map("education")
+}
+
+model Industry {
+    id          Int @id @default(autoincrement())
+    name        String
+    isActive    Boolean @default(true)
+
+    professional    Professional[]
+
+    @@map("industry")
+}
+
+enum RegisterFor {
+  self
+  someoneElse
+}
+
+enum Gender {
+  male
+  female
+}
+
+model Business {
+    id                          Int @id @default(autoincrement())
+    registerFor                 RegisterFor
+    ownerName                   String
+    businessType                String
+    yearsOfExperience           String
+    email                       String?
+    contactNumber               String
+    city                        String
+    residentialArea             String
+    website                     String?
+    fbPage                      String?
+    instaPage                   String?
+    linkedInUrl                 String?
+    notes                       String?
+
+
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    deletedAt       DateTime?
+
+    @@map("business")
 }

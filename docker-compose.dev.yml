@@ -1,6 +1,8 @@
 services:
   professionals-for-christ:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
       - "3003:3003"
       - "9300:9300"
