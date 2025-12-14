@@ -6,9 +6,9 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 
 @Module({
-  imports: [PrismaModule, forwardRef(() => AuthModule)],       // Import PrismaService to use in UsersService
-  controllers: [UsersController], // Handles HTTP requests
-  providers: [AuthService, UsersService],      // Business logic & database calls
-  exports: [UsersService],        // Export if other modules (e.g., AuthModule) need it
+  imports: [PrismaModule, forwardRef(() => AuthModule)],
+  controllers: [UsersController],
+  providers: [AuthService, UsersService],
+  exports: [UsersService],
 })
 export class UsersModule {}

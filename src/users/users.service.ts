@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { paginate } from "src/common/pagination/paginate";
+import { UsersSearchQueryDto } from "./dto/search-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -12,10 +15,6 @@ export class UsersService {
         return this.prisma.user.create({ 
             data
         });
-    }
-
-    findAll() {
-        return this.prisma.user.findMany({ select: { id: true, email: true, name: true } });
     }
 
     findByEmail(email: string) {
@@ -32,5 +31,17 @@ export class UsersService {
 
     delete(id: number) {
         return this.prisma.user.delete({ where: { id } });
+    }
+
+    findAll(query: UsersSearchQueryDto) {
+        const {page, limit, ...filters} = query;
+        return paginate(this.prisma.user, {
+            where: {
+                name: { contains: filters.name, mode: 'insensitive' },
+            },
+            page: page,
+            limit: limit,
+            orderBy: { createdAt: 'desc' },
+        });
     }
 }

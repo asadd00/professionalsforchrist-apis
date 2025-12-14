@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, SetMetadata, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, SetMetadata, UseGuards } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "src/auth/jwt.authguard";
 import { User } from "src/common/decorators/user.decorator";
+import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { UsersSearchQueryDto } from "./dto/search-user.dto";
 
 @Controller('users')
 export class UsersController {
@@ -17,8 +19,8 @@ export class UsersController {
     }
 
     @Get()
-    findAll() {
-        return this.usersService.findAll();
+    findAll(@Query() dto: UsersSearchQueryDto) {
+        return this.usersService.findAll(dto);
     }
 
     @Get('/me')
