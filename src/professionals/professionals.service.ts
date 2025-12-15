@@ -53,6 +53,10 @@ export class ProfessionalService {
             where: {
                 name: { contains: filters.q, mode: 'insensitive' },
             },
+            include: {
+                industry: true,
+                education: true,
+            },
             page: page,
             limit: limit,
             orderBy: { createdAt: 'desc' },
