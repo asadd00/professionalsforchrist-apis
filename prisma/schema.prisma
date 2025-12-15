@@ -44,27 +44,32 @@ model Professional {
     lastInstituteAttended       String
     isEmployed                  Boolean
     occupation                  String
-    industryId                  Int
+    industryId                  Int?
+    otherIndustry               String?
     jobTitle                    String?
     employer                    String?
+    lastEmployer1               String?
+    lastEmployer2               String?
+    lastEmployer3               String?
     residentialAddress          String
     residentialArea             String
     linkedInUrl                 String?
     notes                       String?
+    createdById                 Int
 
     createdAt       DateTime  @default(now())
     updatedAt       DateTime  @updatedAt
     deletedAt       DateTime?
 
     education      Education      @relation(fields: [lastEducationId], references: [id])
-    industry       Industry       @relation(fields: [industryId], references: [id])
+    industry       Industry?       @relation(fields: [industryId], references: [id])
 
     @@map("professional")
 }
 
 model Education {
     id          Int @id @default(autoincrement())
-    name        String
+    name        String  @unique
     isActive    Boolean @default(true)
 
     professional    Professional[]
@@ -74,7 +79,7 @@ model Education {
 
 model Industry {
     id          Int @id @default(autoincrement())
-    name        String
+    name        String  @unique
     isActive    Boolean @default(true)
 
     professional    Professional[]
@@ -107,7 +112,7 @@ model Business {
     instaPage                   String?
     linkedInUrl                 String?
     notes                       String?
-
+    createdById                 Int
 
     createdAt       DateTime  @default(now())
     updatedAt       DateTime  @updatedAt

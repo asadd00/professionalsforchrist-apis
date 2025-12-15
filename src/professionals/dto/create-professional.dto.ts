@@ -1,50 +1,114 @@
-import { IsBoolean, IsEmail, IsEnum, IsString } from "class-validator";
+import {
+  IsString,
+  IsEmail,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  Min,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { RegisterFor, Gender } from '@prisma/client';
 
 export class CreateProfessionalDto {
-    @IsString()
-    name: string;
+  /* ---------- BASIC INFO ---------- */
 
-    @IsEmail()
-    email: string;
+  @IsEnum(RegisterFor)
+  registerFor: RegisterFor;
 
-    @IsEnum({})
-    registerFor: string;
+  @IsString()
+  name: string;
 
-    contactNumber: string;
+  @IsEmail()
+  email: string;
 
-    shouldNumberVisible: string;
+  @IsString()
+  contactNumber: string;
 
-    @IsEnum({})
-    gender: String;
+  @IsBoolean()
+  shouldNumberVisible: boolean;
 
-    churchName: String;
+  @IsEnum(Gender)
+  gender: Gender;
 
-    churchArea: String;
+  createdById: number; //adding later from token
 
-    city: String;
+  /* ---------- CHURCH INFO ---------- */
 
-    lastEducationId: number;
+  @IsString()
+  churchName: string;
 
-    lastDegreeName: String;
+  @IsString()
+  churchArea: string;
 
-    lastInstituteAttended: String;
+  @IsString()
+  city: string;
 
-    @IsBoolean()
-    isEmployed: boolean;
+  /* ---------- EDUCATION ---------- */
 
-    occupation: String;
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  lastEducationId: number;
 
-    industryId: number;
+  @IsString()
+  lastDegreeName: string;
 
-    jobTitle: String;
+  @IsString()
+  lastInstituteAttended: string;
 
-    employer: String;
-    
-    residentialAddress: String;
+  /* ---------- EMPLOYMENT ---------- */
 
-    residentialArea: String;
+  @IsBoolean()
+  isEmployed: boolean;
 
-    linkedInUrl: String;
+  @IsString()
+  occupation: string;
 
-    notes: String;
+  @Type(() => Number)
+  @IsInt()
+  @IsOptional()
+  industryId?: number;
+
+  @IsString()
+  @IsOptional()
+  otherIndustry?: string
+
+  @IsOptional()
+  @IsString()
+  jobTitle?: string;
+
+  @IsOptional()
+  @IsString()
+  employer?: string;
+
+  @IsOptional()
+  @IsString()
+  lastEmployer1?: string;
+
+  @IsOptional()
+  @IsString()
+  lastEmployer2?: string;
+
+  @IsOptional()
+  @IsString()
+  lastEmployer3?: string;
+
+  /* ---------- ADDRESS ---------- */
+
+  @IsString()
+  residentialAddress: string;
+
+  @IsString()
+  residentialArea: string;
+
+  /* ---------- OPTIONAL LINKS / NOTES ---------- */
+
+  @IsOptional()
+  @IsString()
+  linkedInUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }

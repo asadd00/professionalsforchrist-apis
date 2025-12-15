@@ -11,7 +11,7 @@ export async function paginate<
     count: (args: any) => Promise<number>;
   },
   options: PaginateOptions<TWhere, TInclude, TOrderBy>,
-): Promise<{ data: TModel[]; meta: any }> {
+): Promise<{ list: TModel[]; meta: any }> {
   const {
     where = {},
     page = 1,
@@ -23,7 +23,7 @@ export async function paginate<
   const take = Math.min(limit, 100);
   const skip = (page - 1) * take;
 
-  const [data, total] = await Promise.all([
+  const [list, total] = await Promise.all([
     model.findMany({
       where,
       skip,
@@ -35,7 +35,7 @@ export async function paginate<
   ]);
 
   return {
-    data,
+    list,
     meta: {
       total,
       page,

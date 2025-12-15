@@ -14,7 +14,11 @@ export class ProfessionalsController {
     @Post()
     @HttpCode(201)
     @SetMetadata('message', 'Form submitted successfully')
-    create(@Body() dto: CreateProfessionalDto) {
+    create(
+        @User('userId') userId: number,
+        @Body() dto: CreateProfessionalDto
+    ) {
+        dto.createdById = userId;
         return this.professionalService.create(dto);
     }
 
