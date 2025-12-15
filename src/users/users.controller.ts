@@ -2,9 +2,8 @@ import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Po
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
-import { JwtAuthGuard } from "src/auth/jwt.authguard";
-import { User } from "src/common/decorators/user.decorator";
-import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { JwtAuthGuard } from "../auth/jwt.authguard";
+import { User } from "../common/decorators/user.decorator";
 import { UsersSearchQueryDto } from "./dto/search-user.dto";
 
 @Controller('users')

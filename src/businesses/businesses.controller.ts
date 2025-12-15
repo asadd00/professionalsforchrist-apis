@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, SetMetadata, UseGuards } from "@nestjs/common";
 import { CreateBusinessDto } from "./dto/create-business.dto";
 import { BusinessesService } from "./businesses.service";
-import { User } from "src/common/decorators/user.decorator";
+import { User } from "../common/decorators/user.decorator";
 import { UpdateBusinessDto } from "./dto/update-business.dto";
-import { JwtAuthGuard } from "src/auth/jwt.authguard";
-import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { JwtAuthGuard } from "../auth/jwt.authguard";
+import { SearchQueryDto } from "../search/dto/search-query.dto";
 
-@Controller('business')
+@Controller('businesses')
 @UseGuards(JwtAuthGuard)
 export class BusinessesController {
     constructor (private businessesService: BusinessesService){}
@@ -14,7 +14,11 @@ export class BusinessesController {
     @Post()
     @HttpCode(201)
     @SetMetadata('message', 'Form submitted successfully')
-    create(@Body() dto: CreateBusinessDto) {
+    create(
+        @User('userId') userId: number, 
+        @Body() dto: CreateBusinessDto
+    ) {
+        dto.createdById = userId;
         return this.businessesService.create(dto);
     }
 

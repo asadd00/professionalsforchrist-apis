@@ -1,10 +1,10 @@
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { CreateProfessionalDto } from "./dto/create-professional.dto";
 import { Injectable } from "@nestjs/common";
 import { UpdateProfessionalDto } from "./dto/update-professional.dto";
-import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { SearchQueryDto } from "../search/dto/search-query.dto";
 import { contains } from "class-validator";
-import { paginate } from "src/common/pagination/paginate";
+import { paginate } from "../common/pagination/paginate";
 
 @Injectable()
 export class ProfessionalService {
@@ -48,12 +48,13 @@ export class ProfessionalService {
      */
 
     findAll(query: SearchQueryDto) {
+        const {page, limit, ...filters} = query;
         return paginate(this.prisma.professional, {
             where: {
-                deletedAt: null,
+                name: { contains: filters.q, mode: 'insensitive' },
             },
-            page: query.page,
-            limit: query.limit,
+            page: page,
+            limit: limit,
             orderBy: { createdAt: 'desc' },
         });
     }

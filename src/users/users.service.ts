@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { SearchQueryDto } from "src/search/dto/search-query.dto";
-import { paginate } from "src/common/pagination/paginate";
+import { paginate } from "../common/pagination/paginate";
 import { UsersSearchQueryDto } from "./dto/search-user.dto";
 
 @Injectable()

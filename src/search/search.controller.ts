@@ -1,5 +1,5 @@
 import { Controller, Get, Query, UseGuards } from "@nestjs/common";
-import { JwtAuthGuard } from "src/auth/jwt.authguard";
+import { JwtAuthGuard } from "../auth/jwt.authguard";
 import { SearchService } from "./search.service";
 import { SearchQueryDto } from "./dto/search-query.dto";
 
@@ -10,7 +10,8 @@ export class SearchController {
 
     @Get()
     search(@Query() query: SearchQueryDto) {
-        return this.searchService.search(query);
+        const data = this.searchService.search(query);
+        return data;
     }
     
 }

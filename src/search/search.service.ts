@@ -1,14 +1,21 @@
-import { BusinessesService } from "src/businesses/businesses.service";
-import { ProfessionalService } from "src/professionals/professionals.service";
+import { BusinessesService } from "../businesses/businesses.service";
+import { ProfessionalService } from "../professionals/professionals.service";
 import { SearchQueryDto } from "./dto/search-query.dto";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class SearchService {
-    constructor (private professionalService: ProfessionalService, private businessService: BusinessesService) {}
+    constructor(private professionalService: ProfessionalService, private businessService: BusinessesService) { }
 
-    search(data: SearchQueryDto) {
-        const professionals = this.professionalService.findAll(data);
-        const businesses = this.businessService.findAll(data);
+    async search(data: SearchQueryDto) {
+        const [professionalsPage, businessesPage] = await Promise.all([
+            this.professionalService.findAll(data),
+            this.businessService.findAll(data),
+        ]);
 
-        return {professionals, businesses};
+        return {
+            professionals: professionalsPage.list,
+            businesses: businessesPage.list,
+        };
     }
 }

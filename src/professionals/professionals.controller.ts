@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, SetMetadata, UseGuards } from "@nestjs/common";
 import { CreateProfessionalDto } from "./dto/create-professional.dto";
 import { ProfessionalService } from "./professionals.service";
-import { User } from "src/common/decorators/user.decorator";
+import { User } from "../common/decorators/user.decorator";
 import { UpdateProfessionalDto } from "./dto/update-professional.dto";
-import { JwtAuthGuard } from "src/auth/jwt.authguard";
-import { SearchQueryDto } from "src/search/dto/search-query.dto";
+import { JwtAuthGuard } from "../auth/jwt.authguard";
+import { SearchQueryDto } from "../search/dto/search-query.dto";
 
 @Controller('professionals')
 @UseGuards(JwtAuthGuard)

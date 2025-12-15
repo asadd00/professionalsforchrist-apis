@@ -67,6 +67,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       path: request.url,
       timestamp: new Date().toISOString(),
       message,
+      stacktrace: process.env.ENV === 'dev' && exception instanceof Error
+        ? exception.stack
+        : null
     });
   }
 }
