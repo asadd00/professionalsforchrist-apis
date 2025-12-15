@@ -14,8 +14,8 @@ export class SearchService {
         ]);
 
         return {
-            professionals: professionalsPage.list,
-            businesses: businessesPage.list,
+            professionals: professionalsPage,
+            businesses: businessesPage,
         };
     }
 }
