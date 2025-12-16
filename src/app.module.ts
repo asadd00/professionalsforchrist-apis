@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { ProfessionalsModule } from './professionals/professionals.module';
 import { BusinessesModule } from './businesses/businesses.module';
 import { SearchModule } from './search/search.module';
+import { MetaModule } from './meta/meta.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SearchModule } from './search/search.module';
     ProfessionalsModule,
     BusinessesModule,
     SearchModule,
+    MetaModule
   ],
 })
 export class AppModule {}

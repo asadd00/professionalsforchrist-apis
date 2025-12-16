@@ -27,7 +27,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message =
         typeof res === 'string'
           ? res
-          : (res as any).message || message;
+          : Array.isArray((res as any).message)
+            ? (res as any).message.join(', ')
+            : (res as any).message;
 
       errorCode = (res as any).errorCode || 'HTTP_EXCEPTION';
     }
