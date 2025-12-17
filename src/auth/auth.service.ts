@@ -19,7 +19,7 @@ export class AuthService {
       expiresIn: '1d',
     });
 
-    return { ...user, access_token: token };
+    return { ...user, accessToken: token };
   }
 
   verifyToken(token: string) {
