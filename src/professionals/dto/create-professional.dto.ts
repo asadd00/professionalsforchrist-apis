@@ -6,6 +6,7 @@ import {
   IsInt,
   IsOptional,
   Min,
+  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { RegisterFor, Gender } from '@prisma/client';
@@ -17,12 +18,15 @@ export class CreateProfessionalDto {
   registerFor: RegisterFor;
 
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   contactNumber: string;
 
   @IsBoolean()
@@ -31,17 +35,24 @@ export class CreateProfessionalDto {
   @IsEnum(Gender)
   gender: Gender;
 
+  @IsString()
+  @IsNotEmpty()
+  dateOfBirth: string;
+
   createdById: number; //adding later from token
 
   /* ---------- CHURCH INFO ---------- */
 
   @IsString()
+  @IsNotEmpty()
   churchName: string;
 
   @IsString()
+  @IsNotEmpty()
   churchArea: string;
 
   @IsString()
+  @IsNotEmpty()
   city: string;
 
   /* ---------- EDUCATION ---------- */
@@ -63,6 +74,7 @@ export class CreateProfessionalDto {
   isEmployed: boolean;
 
   @IsString()
+  @IsNotEmpty()
   occupation: string;
 
   @Type(() => Number)
@@ -76,6 +88,7 @@ export class CreateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   jobTitle?: string;
 
   @IsOptional()
@@ -97,9 +110,11 @@ export class CreateProfessionalDto {
   /* ---------- ADDRESS ---------- */
 
   @IsString()
+  @IsNotEmpty()
   residentialAddress: string;
 
   @IsString()
+  @IsNotEmpty()
   residentialArea: string;
 
   /* ---------- OPTIONAL LINKS / NOTES ---------- */

@@ -17,6 +17,10 @@ export class CreateBusinessDto {
   @IsNotEmpty()
   yearsOfExperience: string;
 
+  @IsString()
+  @IsNotEmpty()
+  dateOfBirth: string;
+
   @IsOptional()
   @IsEmail()
   email?: string;

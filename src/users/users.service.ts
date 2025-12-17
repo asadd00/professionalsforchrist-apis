@@ -11,13 +11,20 @@ export class UsersService {
 
 
     create(data: CreateUserDto) {
-        return this.prisma.user.create({ 
-            data
-        });
-    }
+        return this.prisma.user.upsert({ 
+            where: {
+                email_loginType: {
+                    email: data.email,
+                    loginType: data.loginType
+                },
+            },
+            update: {
 
-    findByEmail(email: string) {
-        return this.prisma.user.findUnique({ where: { email } });
+            },
+            create: {
+                ...data
+            }
+        });
     }
 
     findById(id: number) {

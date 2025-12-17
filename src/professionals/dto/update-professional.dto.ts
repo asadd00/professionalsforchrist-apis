@@ -6,6 +6,7 @@ import {
   IsInt,
   IsOptional,
   Min,
+  IsNotEmpty,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { RegisterFor, Gender } from '@prisma/client';
@@ -19,14 +20,17 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   name?: string;
 
   @IsOptional()
   @IsEmail()
+  @IsNotEmpty()
   email?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   contactNumber?: string;
 
   @IsOptional()
@@ -37,18 +41,26 @@ export class UpdateProfessionalDto {
   @IsEnum(Gender)
   gender?: Gender;
 
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  dateOfBirth: string;
+
   /* ---------- CHURCH INFO ---------- */
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   churchName?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   churchArea?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   city?: string;
 
   /* ---------- EDUCATION ---------- */
@@ -75,6 +87,7 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   occupation?: string;
 
   @IsOptional()
@@ -89,6 +102,7 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   jobTitle?: string;
 
   @IsOptional()
@@ -111,21 +125,26 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   residentialAddress?: string;
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   residentialArea?: string;
 
   /* ---------- OPTIONAL LINKS / NOTES ---------- */
 
   @IsOptional()
-  @IsOptional()
   @IsString()
   linkedInUrl?: string;
 
   @IsOptional()
-  @IsOptional()
   @IsString()
   notes?: string;
+
+
+  @IsOptional()
+  @IsBoolean()
+  isVerified?: boolean;
 }

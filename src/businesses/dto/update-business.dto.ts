@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsEnum, IsNotEmpty, IsBoolean } from 'class-validator';
 import { RegisterFor } from '@prisma/client';
 
 export class UpdateBusinessDto {
@@ -20,6 +20,11 @@ export class UpdateBusinessDto {
     @IsNotEmpty()
     @IsString()
     yearsOfExperience: string;
+    
+    @IsOptional()
+    @IsNotEmpty()
+    @IsString()
+    dateOfBirth: string;
 
     @IsOptional()
     @IsEmail()
@@ -59,4 +64,8 @@ export class UpdateBusinessDto {
     @IsOptional()
     @IsString()
     notes?: string;
+
+    @IsOptional()
+    @IsBoolean()
+    isVerified?: boolean;
 }

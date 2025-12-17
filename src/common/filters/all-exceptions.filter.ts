@@ -35,6 +35,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     /* ---------------- Prisma Errors ---------------- */
+    else if (exception instanceof Prisma.PrismaClientValidationError) {
+      status = HttpStatus.BAD_REQUEST;
+      message = 'Invalid request data';
+      errorCode = 'PRISMA_VALIDATION_ERROR';
+    }
+    
     else if (exception instanceof Prisma.PrismaClientKnownRequestError) {
       switch (exception.code) {
         case 'P2025': // Record not found
