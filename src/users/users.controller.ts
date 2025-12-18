@@ -4,7 +4,6 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt.authguard";
 import { User } from "../common/decorators/user.decorator";
-import { UsersSearchQueryDto } from "./dto/search-user.dto";
 import { AdminAuthGuard } from "src/auth/admin.authguard";
 import { ResponseMessage } from "src/common/decorators/response-message.decorator";
 import { SearchQueryDto } from "src/search/dto/search-query.dto";
