@@ -4,6 +4,7 @@ import { Injectable } from "@nestjs/common";
 import { UpdateBusinessDto } from "./dto/update-business.dto";
 import { SearchQueryDto } from "../search/dto/search-query.dto";
 import { paginate } from "../common/pagination/paginate";
+import { RegisterFor } from "@prisma/client";
 
 @Injectable()
 export class BusinessesService {
@@ -23,11 +24,30 @@ export class BusinessesService {
         });
     }
 
-    update(id: number, userId: number, data: UpdateBusinessDto) {
+    findForSelf(userId: number) {
+        return this.prisma.business.findFirst({
+            where: {
+                createdById: userId,
+                registerFor: RegisterFor.self
+            }
+        });
+    }
+
+    updateForSelf(id: number, userId: number, data: UpdateBusinessDto) {
         return this.prisma.business.update({
             where: {
                 id,
+                registerFor: RegisterFor.self,
                 createdById: userId
+            },
+            data
+        });
+    }
+
+    update(id: number, data: UpdateBusinessDto) {
+        return this.prisma.business.update({
+            where: {
+                id,
             },
             data
         });

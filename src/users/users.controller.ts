@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, SetMetadata, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt.authguard";
 import { User } from "../common/decorators/user.decorator";
 import { UsersSearchQueryDto } from "./dto/search-user.dto";
+import { AdminAuthGuard } from "src/auth/admin.authguard";
+import { ResponseMessage } from "src/common/decorators/response-message.decorator";
 
 @Controller('users')
 export class UsersController {
@@ -12,7 +14,7 @@ export class UsersController {
 
     @Post()
     @HttpCode(201)
-    @SetMetadata('message', 'User created successfully')
+    @ResponseMessage('User created successfully')
     create(@Body() dto: CreateUserDto) {
         return this.usersService.create(dto);
     }
@@ -28,14 +30,26 @@ export class UsersController {
         return this.usersService.findById(userId);
     }
 
-    @Patch(':id')
+    @Patch()
     @UseGuards(JwtAuthGuard)
+    updateMe(@User('userId') userId: number, @Body() dto: UpdateUserDto) {
+        return this.usersService.update(userId, dto);
+    }
+
+    @Patch(':id')
+    @UseGuards(JwtAuthGuard, AdminAuthGuard)
     update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
         return this.usersService.update(id, dto);
     }
 
-    @Delete(':id')
+    @Delete()
     @UseGuards(JwtAuthGuard)
+    deleteMe(@User('userId') userId: number) {
+        return this.usersService.delete(userId);
+    }
+
+    @Delete(':id')
+    @UseGuards(JwtAuthGuard, AdminAuthGuard)
     delete(@Param('id', ParseIntPipe) id: number) {
         return this.usersService.delete(id);
     }

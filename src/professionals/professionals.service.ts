@@ -5,6 +5,7 @@ import { UpdateProfessionalDto } from "./dto/update-professional.dto";
 import { SearchQueryDto } from "../search/dto/search-query.dto";
 import { contains } from "class-validator";
 import { paginate } from "../common/pagination/paginate";
+import { RegisterFor } from "@prisma/client";
 
 @Injectable()
 export class ProfessionalService {
@@ -24,11 +25,30 @@ export class ProfessionalService {
         });
     }
 
-    update(id: number, userId: number, data: UpdateProfessionalDto) {
+    findForSelf(userId: number) {
+        return this.prisma.professional.findFirst({
+            where: {
+                createdById: userId,
+                registerFor: RegisterFor.self
+            }
+        });
+    }
+
+    updateForSelf(id: number, userId: number, data: UpdateProfessionalDto) {
         return this.prisma.professional.update({
             where: {
                 id,
+                registerFor: RegisterFor.self,
                 createdById: userId
+            },
+            data
+        });
+    }
+
+    update(id: number, data: UpdateProfessionalDto) {
+        return this.prisma.professional.update({
+            where: {
+                id,
             },
             data
         });

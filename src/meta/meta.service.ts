@@ -11,11 +11,17 @@ export class MetaService {
             this.prisma.industry.findMany({
                 where: {
                     isActive: true
+                },
+                orderBy: {
+                    id: 'asc'
                 }
             }),
             this.prisma.education.findMany({
                 where: {
                     isActive: true
+                },
+                orderBy: {
+                    id: 'asc'
                 }
             })
         ]);
