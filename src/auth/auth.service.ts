@@ -14,7 +14,7 @@ export class AuthService {
       throw new UnauthorizedException('User is not active, please contact support');
     }
 
-    const payload = { userId: user.id, email: user.email };
+    const payload = { userId: user.id, email: user.email, role: user.role };
     const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET as string, {
       expiresIn: '1d',
     });

@@ -3,7 +3,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { paginate } from "../common/pagination/paginate";
-import { UsersSearchQueryDto } from "./dto/search-user.dto";
+import { SearchQueryDto } from "src/search/dto/search-query.dto";
 
 @Injectable()
 export class UsersService {
@@ -39,11 +39,14 @@ export class UsersService {
         return this.prisma.user.delete({ where: { id } });
     }
 
-    findAll(query: UsersSearchQueryDto) {
+    findAll(myUserId: number, query: SearchQueryDto) {
         const {page, limit, ...filters} = query;
         return paginate(this.prisma.user, {
             where: {
-                name: { contains: filters.name, mode: 'insensitive' },
+                NOT: {
+                    id: myUserId,
+                },
+                name: { contains: filters.q, mode: 'insensitive' },
             },
             page: page,
             limit: limit,

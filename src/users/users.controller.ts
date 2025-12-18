@@ -7,6 +7,7 @@ import { User } from "../common/decorators/user.decorator";
 import { UsersSearchQueryDto } from "./dto/search-user.dto";
 import { AdminAuthGuard } from "src/auth/admin.authguard";
 import { ResponseMessage } from "src/common/decorators/response-message.decorator";
+import { SearchQueryDto } from "src/search/dto/search-query.dto";
 
 @Controller('users')
 export class UsersController {
@@ -20,8 +21,9 @@ export class UsersController {
     }
 
     @Get()
-    findAll(@Query() dto: UsersSearchQueryDto) {
-        return this.usersService.findAll(dto);
+    @UseGuards(JwtAuthGuard, AdminAuthGuard)
+    findAll(@User('userId') userId: number, @Query() dto: SearchQueryDto) {
+        return this.usersService.findAll(userId, dto);
     }
 
     @Get('/me')

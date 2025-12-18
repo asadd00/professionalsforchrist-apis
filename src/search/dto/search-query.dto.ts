@@ -1,5 +1,5 @@
 import { IsOptional, IsString, IsInt, Min } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 
 export class SearchQueryDto {
   @IsOptional()
@@ -13,8 +13,12 @@ export class SearchQueryDto {
   page?: number;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value }) =>
+    value === null || value === undefined || value === ''
+      ? 10
+      : Number(value),
+  )
   @IsInt()
   @Min(1)
-  limit?: number;
+  limit?: number = 10;
 }
