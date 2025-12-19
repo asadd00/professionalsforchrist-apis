@@ -14,8 +14,8 @@ async function bootstrap() {
   app.enableCors({
     origin: (origin, callback) => {
       const allowedOrigins = [
-        'http://localhost:59956',
-        'http://127.0.0.1:59956',
+        'http://localhost:49962',
+        'http://127.0.0.1:49962',
         'https://admin.p4f.com',
         'http://127.0.0.1:3003',
         'https://api.p4f.com',

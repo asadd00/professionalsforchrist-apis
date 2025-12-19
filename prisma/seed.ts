@@ -35,21 +35,22 @@ async function main() {
      * industry
      */
 
-    // const industries = [
-    //     { name: '' },
-    // ];
+    const industries = [
+        { name: 'IT' },
+        { name: 'Other' },
+    ];
 
-    // for (const industry of industries) {
-    //     await prisma.industry.upsert({
-    //         where: { name: industry.name },
-    //         update: {},
-    //         create: {
-    //             name: industry.name,
-    //         },
-    //     });
-    // }
+    for (const industry of industries) {
+        await prisma.industry.upsert({
+            where: { name: industry.name },
+            update: {},
+            create: {
+                name: industry.name,
+            },
+        });
+    }
 
-    // console.log('Industry seed completed');
+    console.log('Industry seed completed');
 }
 
 main()

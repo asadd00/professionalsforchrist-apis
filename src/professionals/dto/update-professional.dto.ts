@@ -110,6 +110,11 @@ export class UpdateProfessionalDto {
   employer?: string;
 
   @IsOptional()
+  @IsNotEmpty()
+  @IsString()
+  yearsOfExperience: string;
+
+  @IsOptional()
   @IsString()
   lastEmployer1?: string;
 

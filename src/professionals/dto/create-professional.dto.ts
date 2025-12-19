@@ -95,6 +95,10 @@ export class CreateProfessionalDto {
   @IsString()
   employer?: string;
 
+  @IsString()
+  @IsNotEmpty()
+  yearsOfExperience: string;
+  
   @IsOptional()
   @IsString()
   lastEmployer1?: string;
