@@ -7,7 +7,11 @@ export class SearchQueryDto {
   q?: string;
 
   @IsOptional()
-  @Type(() => Number)
+  @Transform(({ value }) =>
+    value === null || value === undefined || value === ''
+      ? 1
+      : Number(value),
+  )
   @IsInt()
   @Min(1)
   page?: number;
