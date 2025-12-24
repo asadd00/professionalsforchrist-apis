@@ -1,13 +1,13 @@
 services:
   professionals-for-christ:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - "3003:3003"
-      - "9300:9300"
-    env_file: 
-      .env
+      - "${PORT}:${PORT}"
+      - "${DEBUG_PORT}:${DEBUG_PORT}"
+    env_file:
+      - .env
     restart: unless-stopped
     volumes:
       - .:/app
