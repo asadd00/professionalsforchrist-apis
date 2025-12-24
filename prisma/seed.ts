@@ -36,7 +36,26 @@ async function main() {
      */
 
     const industries = [
-        { name: 'IT' },
+        { name: 'Accounting' },
+        { name: 'Advertising and Marketing' },
+        { name: 'Aerospace' },
+        { name: 'Agriculture' },
+        { name: 'Computer and Technology (including IT and Software)' },
+        { name: 'Construction' },
+        { name: 'Education and Training' },
+        { name: 'Energy (including Renewables and Oil & Gas)' },
+        { name: 'Engineering' },
+        { name: 'Entertainment and Media' },
+        { name: 'Fashion' },
+        { name: 'Finance and Economics (including Banking and Insurance)' },
+        { name: 'Food and Beverage' },
+        { name: 'Government and Public Service' },
+        { name: 'Healthcare and Social Assistance' },
+        { name: 'Hospitality and Tourism' },
+        { name: 'Legal' },
+        { name: 'Manufacturing' },
+        { name: 'Pharmaceutical and Biotechnology' },
+        { name: 'Transportation and Logistics' },
         { name: 'Other' },
     ];
 
