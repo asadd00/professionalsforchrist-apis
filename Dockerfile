@@ -9,6 +9,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Build the NestJS application
+RUN npm run build
+
 # Expose port
 EXPOSE 3000
 
