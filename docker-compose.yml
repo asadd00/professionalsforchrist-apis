@@ -1,14 +1,13 @@
 services:
   professionals-for-christ:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "${PORT}:${PORT}"
     env_file:
       - .env
     restart: unless-stopped
-    volumes:
-      - .:/app
-      - /app/node_modules
     networks:
       - shared_local_network
 
