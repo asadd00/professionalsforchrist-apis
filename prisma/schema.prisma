@@ -108,6 +108,7 @@ enum RegisterFor {
 enum Gender {
   male
   female
+  other
 }
 
 model Business {
