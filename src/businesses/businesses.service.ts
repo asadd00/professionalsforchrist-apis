@@ -62,6 +62,14 @@ export class BusinessesService {
         });
     }
 
+    deleteAllByUserId(userId: number) {
+        return this.prisma.business.deleteMany({
+            where: {
+                createdById: userId
+            }
+        });
+    }
+
     /**
      * admin
      */
@@ -70,7 +78,12 @@ export class BusinessesService {
         const {page, limit, ...filters} = query;
         return paginate(this.prisma.business, {
             where: {
-                ownerName: { contains: filters.q, mode: 'insensitive' },
+                deletedAt: null,
+                OR: [
+                    { ownerName: { contains: filters.q, mode: 'insensitive' } },
+                    { businessType: { contains: filters.q, mode: 'insensitive' } },
+                    { residentialArea: { contains: filters.q, mode: 'insensitive' } },
+                ],
             },
             page: page,
             limit: limit,

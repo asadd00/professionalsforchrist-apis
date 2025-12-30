@@ -63,6 +63,14 @@ export class ProfessionalService {
         });
     }
 
+    deleteAllByUserId(userId: number) {
+        return this.prisma.professional.deleteMany({
+            where: {
+                createdById: userId
+            }
+        });
+    }
+
     /**
      * admin
      */
@@ -71,7 +79,23 @@ export class ProfessionalService {
         const {page, limit, ...filters} = query;
         return paginate(this.prisma.professional, {
             where: {
-                name: { contains: filters.q, mode: 'insensitive' },
+                deletedAt: null,
+                OR: [
+                    { name: { contains: filters.q, mode: 'insensitive' } },
+                    { occupation: { contains: filters.q, mode: 'insensitive' } },
+                    { jobTitle: { contains: filters.q, mode: 'insensitive' } },
+                    { residentialArea: { contains: filters.q, mode: 'insensitive' } },
+                    { employer: { contains: filters.q, mode: 'insensitive' } },
+                    { churchName: { contains: filters.q, mode: 'insensitive' } },
+                    { city: { contains: filters.q, mode: 'insensitive' } },
+                    {
+                        industry: {
+                            is: {
+                                name: { contains: filters.q, mode: 'insensitive' },
+                            },
+                        },
+                    },
+                ],
             },
             include: {
                 industry: true,
