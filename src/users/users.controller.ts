@@ -47,16 +47,16 @@ export class UsersController {
 
     @Delete()
     @UseGuards(JwtAuthGuard)
-    deleteMe(@User('userId') userId: number) {
-        return this.usersService.delete(userId);
+    async deleteMe(@User('userId') userId: number) {
+        await this.professionalService.deleteAllByUserId(userId);
+        await this.businessService.deleteAllByUserId(userId);
+        return await this.usersService.delete(userId);
     }
 
     @Delete(':id')
     @UseGuards(JwtAuthGuard, AdminAuthGuard)
-    async delete(@Param('id', ParseIntPipe) id: number) {
-        await this.professionalService.deleteAllByUserId(id);
-        await this.businessService.deleteAllByUserId(id);
-        return await this.usersService.delete(id);
+    delete(@Param('id', ParseIntPipe) id: number) {
+        return this.usersService.delete(id);
     }
 
 }
