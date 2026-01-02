@@ -7,12 +7,10 @@ import { User } from "../common/decorators/user.decorator";
 import { AdminAuthGuard } from "src/auth/admin.authguard";
 import { ResponseMessage } from "src/common/decorators/response-message.decorator";
 import { SearchQueryDto } from "src/search/dto/search-query.dto";
-import { ProfessionalService } from "src/professionals/professionals.service";
-import { BusinessesService } from "src/businesses/businesses.service";
 
 @Controller('users')
 export class UsersController {
-    constructor(private usersService: UsersService, private professionalService: ProfessionalService, private businessService: BusinessesService) { }
+    constructor(private usersService: UsersService) { }
 
     @Post()
     @HttpCode(201)
@@ -48,8 +46,6 @@ export class UsersController {
     @Delete()
     @UseGuards(JwtAuthGuard)
     async deleteMe(@User('userId') userId: number) {
-        await this.professionalService.deleteAllByUserId(userId);
-        await this.businessService.deleteAllByUserId(userId);
         return await this.usersService.delete(userId);
     }
 

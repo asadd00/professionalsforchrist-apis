@@ -63,10 +63,12 @@ export class CreateProfessionalDto {
   lastEducationId: number;
 
   @IsString()
-  lastDegreeName: string;
+  @IsOptional()
+  lastDegreeName?: string;
 
   @IsString()
-  lastInstituteAttended: string;
+  @IsOptional()
+  lastInstituteAttended?: string;
 
   /* ---------- EMPLOYMENT ---------- */
 
