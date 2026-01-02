@@ -8,7 +8,7 @@ import {
   Min,
   IsNotEmpty,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { RegisterFor, Gender } from '@prisma/client';
 
 export class UpdateProfessionalDto {
@@ -73,10 +73,12 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => value ?? undefined)
   lastDegreeName?: string;
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => value ?? undefined)
   lastInstituteAttended?: string;
 
   /* ---------- EMPLOYMENT ---------- */
