@@ -53,11 +53,11 @@ export class BusinessesService {
         });
     }
 
-    delete(id: number, userId: number) {
+    delete(id: number, userId: number, role: string) {
         return this.prisma.business.delete({
             where: {
                 id,
-                createdById: userId
+                ...(role != 'admin' && {createdById: userId})
             }
         });
     }

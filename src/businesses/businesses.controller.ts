@@ -68,8 +68,9 @@ export class BusinessesController {
     delete(
         @Param('id', ParseIntPipe) id: number,
         @User('userId') userId: number,
+        @User('role') role: string,
     ) {
-        return this.businessesService.delete(id, userId);
+        return this.businessesService.delete(id, userId, role);
     }
 
     /**

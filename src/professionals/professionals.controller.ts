@@ -68,8 +68,9 @@ export class ProfessionalsController {
     delete(
         @Param('id', ParseIntPipe) id: number,
         @User('userId') userId: number,
+        @User('role') role: string,
     ) {
-        return this.professionalService.delete(id, userId);
+        return this.professionalService.delete(id, userId, role);
     }
 
     /**
