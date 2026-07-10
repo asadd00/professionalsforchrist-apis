@@ -16,6 +16,7 @@ async function bootstrap() {
       const allowedOrigins = [
         'http://localhost:49962',
         'http://127.0.0.1:49962',
+        'http://localhost:3000',
         'https://admin.professionalsforchrist.com',
         `http://127.0.0.1:${process.env.PORT}`,
         'https://professionalsforchrist.com',

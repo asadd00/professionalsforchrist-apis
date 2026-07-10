@@ -80,22 +80,24 @@ export class ProfessionalService {
         return paginate(this.prisma.professional, {
             where: {
                 deletedAt: null,
-                OR: [
-                    { name: { contains: filters.q, mode: 'insensitive' } },
-                    { occupation: { contains: filters.q, mode: 'insensitive' } },
-                    { jobTitle: { contains: filters.q, mode: 'insensitive' } },
-                    { residentialArea: { contains: filters.q, mode: 'insensitive' } },
-                    { employer: { contains: filters.q, mode: 'insensitive' } },
-                    { churchName: { contains: filters.q, mode: 'insensitive' } },
-                    { city: { contains: filters.q, mode: 'insensitive' } },
-                    {
-                        industry: {
-                            is: {
-                                name: { contains: filters.q, mode: 'insensitive' },
+                ...(filters.q && {
+                    OR: [
+                        { name: { contains: filters.q, mode: 'insensitive' } },
+                        { occupation: { contains: filters.q, mode: 'insensitive' } },
+                        { jobTitle: { contains: filters.q, mode: 'insensitive' } },
+                        { residentialArea: { contains: filters.q, mode: 'insensitive' } },
+                        { employer: { contains: filters.q, mode: 'insensitive' } },
+                        { churchName: { contains: filters.q, mode: 'insensitive' } },
+                        { city: { contains: filters.q, mode: 'insensitive' } },
+                        {
+                            industry: {
+                                is: {
+                                    name: { contains: filters.q, mode: 'insensitive' },
+                                },
                             },
                         },
-                    },
-                ],
+                    ],
+                }),
             },
             include: {
                 industry: true,

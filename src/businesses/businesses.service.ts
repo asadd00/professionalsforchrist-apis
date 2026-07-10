@@ -79,11 +79,13 @@ export class BusinessesService {
         return paginate(this.prisma.business, {
             where: {
                 deletedAt: null,
-                OR: [
-                    { ownerName: { contains: filters.q, mode: 'insensitive' } },
-                    { businessType: { contains: filters.q, mode: 'insensitive' } },
-                    { residentialArea: { contains: filters.q, mode: 'insensitive' } },
-                ],
+                ...(filters.q && {
+                    OR: [
+                        { ownerName: { contains: filters.q, mode: 'insensitive' } },
+                        { businessType: { contains: filters.q, mode: 'insensitive' } },
+                        { residentialArea: { contains: filters.q, mode: 'insensitive' } },
+                    ],
+                }),
             },
             page: page,
             limit: limit,

@@ -15,6 +15,7 @@ export class UsersController {
     @Post()
     @HttpCode(201)
     @ResponseMessage('User created successfully')
+    @UseGuards(JwtAuthGuard, AdminAuthGuard)
     create(@Body() dto: CreateUserDto) {
         return this.usersService.create(dto);
     }
