@@ -10,7 +10,7 @@ import { RegisterFor } from "@prisma/client";
 export class BusinessesService {
     constructor(private prisma: PrismaService) { }
 
-    create(data: CreateBusinessDto) {
+    create(data: CreateBusinessDto & { createdById: number }) {
         return this.prisma.business.create({
             data
         });

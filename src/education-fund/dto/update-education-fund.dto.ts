@@ -1,0 +1,16 @@
+import { IsNumber, IsOptional, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class UpdateEducationFundDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  totalFund?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  fundUtilized?: number;
+}

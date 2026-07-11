@@ -39,7 +39,10 @@ export class CreateProfessionalDto {
   @IsNotEmpty()
   dateOfBirth: string;
 
-  createdById: number; //adding later from token
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  createdById?: number; // self-serve route always overwrites this from the token; admin route may supply it explicitly
 
   /* ---------- CHURCH INFO ---------- */
 

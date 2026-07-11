@@ -15,6 +15,8 @@ model User {
     name            String
     email           String
     phone           String?
+    city            String?
+    residentialArea String?
     password        String?
     socialId        String? @unique
     loginType       String
@@ -32,8 +34,40 @@ model User {
 
     professionals       Professional[]
     businesses          Business[]
+    deviceTokens        DeviceToken[]
+    prayerRequests      PrayerRequest[]
+    notifications       Notification[]
+    notificationReads   NotificationRead[]
 
     @@map("user")
+}
+
+model Notification {
+    id        Int @id @default(autoincrement())
+    title     String
+    body      String
+    userId    Int? // null = broadcast, visible to every user
+
+    createdAt DateTime @default(now())
+
+    user      User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+    reads     NotificationRead[]
+
+    @@map("notification")
+}
+
+model NotificationRead {
+    id             Int @id @default(autoincrement())
+    notificationId Int
+    userId         Int
+
+    readAt         DateTime @default(now())
+
+    notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+    user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([notificationId, userId])
+    @@map("notification_read")
 }
 
 enum UserRole {
@@ -99,7 +133,9 @@ model Industry {
     name        String  @unique
     isActive    Boolean @default(true)
 
-    professional    Professional[]
+    professional        Professional[]
+    notableBusinesses   NotableBusiness[]
+    communityLeaders    CommunityLeader[]
 
     @@map("industry")
 }
@@ -141,4 +177,108 @@ model Business {
     createdByUser      User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
 
     @@map("business")
+}
+
+model DeviceToken {
+    id          Int @id @default(autoincrement())
+    userId      Int
+    token       String @unique
+    platform    String?
+
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("device_token")
+}
+
+model NotableBusiness {
+    id            Int @id @default(autoincrement())
+    name          String
+    industryId    Int?
+    city          String
+    contribution  String
+    website       String?
+    facebook      String?
+    instagram     String?
+    linkedin      String?
+    whatsapp      String?
+    phone         String?
+    isVerified    Boolean @default(false)
+
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    deletedAt     DateTime?
+
+    industry      Industry? @relation(fields: [industryId], references: [id])
+
+    @@map("notable_business")
+}
+
+model CommunityLeader {
+    id            Int @id @default(autoincrement())
+    name          String
+    jobTitle      String
+    industryId    Int?
+    city          String
+    contribution  String
+    achievements  String?
+    website       String?
+    facebook      String?
+    instagram     String?
+    linkedin      String?
+    whatsapp      String?
+    phone         String?
+    isVerified    Boolean @default(false)
+
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    deletedAt     DateTime?
+
+    industry      Industry? @relation(fields: [industryId], references: [id])
+
+    @@map("community_leader")
+}
+
+model PrayerType {
+    id          Int @id @default(autoincrement())
+    name        String @unique
+    isActive    Boolean @default(true)
+
+    prayerRequests  PrayerRequest[]
+
+    @@map("prayer_type")
+}
+
+model PrayerRequest {
+    id              Int @id @default(autoincrement())
+    fullName        String
+    contactNumber   String
+    email           String?
+    isAnonymous     Boolean @default(false)
+    prayerTypeId    Int
+    prayerText      String
+    isPrayed        Boolean @default(false)
+    prayedAt        DateTime?
+    createdById     Int
+
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    deletedAt       DateTime?
+
+    prayerType      PrayerType @relation(fields: [prayerTypeId], references: [id])
+    createdByUser   User       @relation(fields: [createdById], references: [id], onDelete: Cascade)
+
+    @@map("prayer_request")
+}
+
+model EducationFund {
+    id            Int @id @default(autoincrement())
+    totalFund     Decimal @default(0) @db.Decimal(14, 2)
+    fundUtilized  Decimal @default(0) @db.Decimal(14, 2)
+
+    updatedAt     DateTime @updatedAt
+
+    @@map("education_fund")
 }

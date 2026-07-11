@@ -24,8 +24,7 @@ export class ProfessionalsController {
         const existing = await this.professionalService.findForSelf(userId);
         if(existing && dto.registerFor == RegisterFor.self) throw new ConflictException('Form alreay exists for yourself');
 
-        dto.createdById = userId;
-        return this.professionalService.create(dto);
+        return this.professionalService.create({ ...dto, createdById: userId });
     }
 
     @Get('/by-me')
@@ -80,5 +79,16 @@ export class ProfessionalsController {
     @Get()
     findAll(@Query() query: SearchQueryDto) {
         return this.professionalService.findAll(query);
+    }
+
+    @Post('admin')
+    @HttpCode(201)
+    @UseGuards(AdminAuthGuard)
+    @ResponseMessage('Professional created')
+    createAsAdmin(
+        @User('userId') adminUserId: number,
+        @Body() dto: CreateProfessionalDto
+    ) {
+        return this.professionalService.create({ ...dto, createdById: dto.createdById ?? adminUserId });
     }
 }

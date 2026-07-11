@@ -11,7 +11,7 @@ import { RegisterFor } from "@prisma/client";
 export class ProfessionalService {
     constructor(private prisma: PrismaService) { }
 
-    create(data: CreateProfessionalDto) {
+    create(data: CreateProfessionalDto & { createdById: number }) {
         return this.prisma.professional.create({
             data
         });

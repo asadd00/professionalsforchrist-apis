@@ -108,6 +108,53 @@ async function main() {
     }
 
     console.log('Industry seed completed');
+
+    /**
+     * prayer type
+     */
+
+    const prayerTypes = [
+        { name: 'Job / Business' },
+        { name: 'Promotion' },
+        { name: 'Finances' },
+        { name: 'Debt Payoff' },
+        { name: 'Suitable Life Partner' },
+        { name: 'Marital Issues' },
+        { name: 'Success in Exams' },
+        { name: 'Gift of a child' },
+        { name: 'Health' },
+        { name: 'Protection' },
+        { name: 'Spiritual Growth' },
+        { name: 'Others' },
+    ];
+
+    for (const prayerType of prayerTypes) {
+        await prisma.prayerType.upsert({
+            where: { name: prayerType.name },
+            update: {},
+            create: {
+                name: prayerType.name,
+            },
+        });
+    }
+
+    console.log('Prayer type seed completed');
+
+    /**
+     * education fund
+     */
+
+    await prisma.educationFund.upsert({
+        where: { id: 1 },
+        update: {},
+        create: {
+            id: 1,
+            totalFund: 0,
+            fundUtilized: 0,
+        },
+    });
+
+    console.log('Education fund seed completed');
 }
 
 main()

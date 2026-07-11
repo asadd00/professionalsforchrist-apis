@@ -1,4 +1,5 @@
 import { IsString, IsOptional, IsEmail, IsEnum, IsInt, IsNotEmpty } from 'class-validator';
+import { Type } from 'class-transformer';
 import { RegisterFor } from '@prisma/client';
 
 export class CreateBusinessDto {
@@ -57,5 +58,8 @@ export class CreateBusinessDto {
   @IsString()
   notes?: string;
 
-  createdById: number; //adding later from token
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  createdById?: number; // self-serve route always overwrites this from the token; admin route may supply it explicitly
 }

@@ -7,7 +7,7 @@ export class MetaService {
 
     async getMeta() {
 
-        const [industries, educations] = await Promise.all([
+        const [industries, educations, prayerTypes] = await Promise.all([
             this.prisma.industry.findMany({
                 where: {
                     isActive: true
@@ -23,9 +23,17 @@ export class MetaService {
                 orderBy: {
                     id: 'asc'
                 }
+            }),
+            this.prisma.prayerType.findMany({
+                where: {
+                    isActive: true
+                },
+                orderBy: {
+                    id: 'asc'
+                }
             })
         ]);
 
-        return {industries, educations};
+        return {industries, educations, prayerTypes};
     }
 }

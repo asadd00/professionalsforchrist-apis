@@ -24,8 +24,7 @@ export class BusinessesController {
         const existing = await this.businessesService.findForSelf(userId);
         if(existing && dto.registerFor == RegisterFor.self) throw new ConflictException('Form alreay exists for yourself');
 
-        dto.createdById = userId;
-        return this.businessesService.create(dto);
+        return this.businessesService.create({ ...dto, createdById: userId });
     }
 
     @Get('by-me')
@@ -80,5 +79,16 @@ export class BusinessesController {
     @Get()
     findAll(@Query() query: SearchQueryDto) {
         return this.businessesService.findAll(query);
+    }
+
+    @Post('admin')
+    @HttpCode(201)
+    @UseGuards(AdminAuthGuard)
+    @ResponseMessage('Business created')
+    createAsAdmin(
+        @User('userId') adminUserId: number,
+        @Body() dto: CreateBusinessDto
+    ) {
+        return this.businessesService.create({ ...dto, createdById: dto.createdById ?? adminUserId });
     }
 }
