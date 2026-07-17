@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class SendBroadcastDto {
   @IsString()
@@ -8,4 +8,8 @@ export class SendBroadcastDto {
   @IsString()
   @IsNotEmpty()
   body: string;
+
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }

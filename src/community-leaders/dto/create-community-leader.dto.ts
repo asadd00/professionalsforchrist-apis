@@ -6,10 +6,6 @@ export class CreateCommunityLeaderDto {
   @IsNotEmpty()
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  jobTitle: string;
-
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -22,10 +18,6 @@ export class CreateCommunityLeaderDto {
   @IsString()
   @IsNotEmpty()
   contribution: string;
-
-  @IsOptional()
-  @IsString()
-  achievements?: string;
 
   @IsOptional()
   @IsString()

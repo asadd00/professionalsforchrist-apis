@@ -8,11 +8,6 @@ export class UpdateCommunityLeaderDto {
   name?: string;
 
   @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  jobTitle?: string;
-
-  @IsOptional()
   @Type(() => Number)
   @IsInt()
   industryId?: number;
@@ -26,10 +21,6 @@ export class UpdateCommunityLeaderDto {
   @IsString()
   @IsNotEmpty()
   contribution?: string;
-
-  @IsOptional()
-  @IsString()
-  achievements?: string;
 
   @IsOptional()
   @IsString()

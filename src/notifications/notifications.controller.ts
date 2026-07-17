@@ -1,4 +1,18 @@
-import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { extname } from 'path';
 import { JwtAuthGuard } from '../auth/jwt.authguard';
 import { AdminAuthGuard } from '../auth/admin.authguard';
 import { User } from '../common/decorators/user.decorator';
@@ -8,6 +22,7 @@ import { NotificationsService } from './notifications.service';
 import { RegisterDeviceTokenDto } from './dto/register-device-token.dto';
 import { UnregisterDeviceTokenDto } from './dto/unregister-device-token.dto';
 import { SendBroadcastDto } from './dto/send-broadcast.dto';
+import { notificationImageMulterOptions } from './notification-image.multer-config';
 
 @Controller('notifications')
 @UseGuards(JwtAuthGuard)
@@ -30,7 +45,20 @@ export class NotificationsController {
   @UseGuards(AdminAuthGuard)
   @ResponseMessage('Notification sent')
   sendBroadcast(@Body() dto: SendBroadcastDto) {
-    return this.notificationsService.sendToAll({ title: dto.title, body: dto.body });
+    return this.notificationsService.sendToAll({ title: dto.title, body: dto.body, imageUrl: dto.imageUrl });
+  }
+
+  // Separate from `sendBroadcast` since it accepts multipart/form-data, not JSON — the admin
+  // uploads the image first, then submits title/body/imageUrl as a normal broadcast.
+  @Post('broadcast/image')
+  @UseGuards(AdminAuthGuard)
+  @UseInterceptors(FileInterceptor('image', notificationImageMulterOptions))
+  @ResponseMessage('Image uploaded')
+  async uploadBroadcastImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) throw new BadRequestException('image file is required');
+
+    const url = await this.notificationsService.uploadImage(file.buffer, file.mimetype, extname(file.originalname));
+    return { url };
   }
 
   @Get('me')

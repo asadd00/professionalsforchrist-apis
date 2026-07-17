@@ -46,6 +46,7 @@ model Notification {
     id        Int @id @default(autoincrement())
     title     String
     body      String
+    imageUrl  String?
     userId    Int? // null = broadcast, visible to every user
 
     createdAt DateTime @default(now())
@@ -219,11 +220,9 @@ model NotableBusiness {
 model CommunityLeader {
     id            Int @id @default(autoincrement())
     name          String
-    jobTitle      String
     industryId    Int?
     city          String
     contribution  String
-    achievements  String?
     website       String?
     facebook      String?
     instagram     String?

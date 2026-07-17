@@ -1,6 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { initializeApp, cert, App } from 'firebase-admin/app';
 import { getMessaging } from 'firebase-admin/messaging';
+import { getStorage } from 'firebase-admin/storage';
+import { randomUUID } from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { paginate } from '../common/pagination/paginate';
 import { PaginationQueryDto } from '../common/pagination/pagination-query.dto';
@@ -8,6 +10,7 @@ import { PaginationQueryDto } from '../common/pagination/pagination-query.dto';
 export type NotificationPayload = {
   title: string;
   body: string;
+  imageUrl?: string;
   data?: Record<string, string>;
 };
 
@@ -22,6 +25,7 @@ export class NotificationsService {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+    const storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
 
     if (!projectId || !clientEmail || !privateKey) {
       this.logger.warn(
@@ -30,12 +34,19 @@ export class NotificationsService {
       return;
     }
 
+    if (!storageBucket) {
+      this.logger.warn(
+        'FIREBASE_STORAGE_BUCKET is not set — broadcast notification image uploads will fail until it is configured.',
+      );
+    }
+
     this.app = initializeApp({
       credential: cert({
         projectId,
         clientEmail,
         privateKey: privateKey.replace(/\\n/g, '\n'),
       }),
+      storageBucket,
     });
   }
 
@@ -51,9 +62,39 @@ export class NotificationsService {
     return this.prisma.deviceToken.deleteMany({ where: { token } });
   }
 
+  /**
+   * Uploads a broadcast notification's image to Firebase Storage (same Firebase project as FCM)
+   * and returns a public HTTPS URL. This has to be publicly reachable over the internet — FCM
+   * and the receiving device fetch it directly when delivering a rich/"big picture" push, not
+   * just the admin's own browser — which local disk storage behind the backend's own host can't
+   * guarantee (see backend CLAUDE.md's "Notification images" for why this replaced that).
+   */
+  async uploadImage(buffer: Buffer, mimetype: string, extension: string): Promise<string> {
+    if (!this.app) {
+      throw new InternalServerErrorException(
+        'Image upload is unavailable — Firebase Admin credentials are not configured.',
+      );
+    }
+
+    const bucket = getStorage(this.app).bucket();
+    const path = `notifications/${randomUUID()}${extension}`;
+
+    try {
+      await bucket.file(path).save(buffer, { metadata: { contentType: mimetype }, public: true });
+    } catch (error) {
+      // Per-object ACLs (the `public: true` option) fail on buckets with "Uniform bucket-level
+      // access" enabled (the default for buckets created since 2020) — those need a bucket-level
+      // IAM binding (allUsers: Storage Object Viewer) instead, set once in the Cloud Console.
+      this.logger.error('Failed to upload notification image to Firebase Storage', error as Error);
+      throw new InternalServerErrorException('Failed to upload image. Check the storage bucket configuration.');
+    }
+
+    return `https://storage.googleapis.com/${bucket.name}/${path}`;
+  }
+
   async sendToUser(userId: number, payload: NotificationPayload) {
     await this.prisma.notification.create({
-      data: { title: payload.title, body: payload.body, userId },
+      data: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl, userId },
     });
 
     const tokens = await this.prisma.deviceToken.findMany({
@@ -66,7 +107,7 @@ export class NotificationsService {
 
   async sendToAll(payload: NotificationPayload) {
     await this.prisma.notification.create({
-      data: { title: payload.title, body: payload.body, userId: null },
+      data: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl, userId: null },
     });
 
     const tokens = await this.prisma.deviceToken.findMany({ select: { token: true } });
@@ -100,6 +141,7 @@ export class NotificationsService {
         id: n.id,
         title: n.title,
         body: n.body,
+        imageUrl: n.imageUrl,
         createdAt: n.createdAt,
         isRead: n.reads.length > 0,
       })),
@@ -135,7 +177,7 @@ export class NotificationsService {
 
       const response = await messaging.sendEachForMulticast({
         tokens: batch,
-        notification: { title: payload.title, body: payload.body },
+        notification: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl },
         data: payload.data,
       });
 
