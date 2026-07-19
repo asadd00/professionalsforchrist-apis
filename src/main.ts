@@ -18,6 +18,7 @@ async function bootstrap() {
         'http://127.0.0.1:49962',
         'http://localhost:3000',
         'https://admin.professionalsforchrist.com',
+        'https://fe-dev.professionalsforchrist.com',
         `http://127.0.0.1:${process.env.PORT}`,
         'https://professionalsforchrist.com',
       ];
