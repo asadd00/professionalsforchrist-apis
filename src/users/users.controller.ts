@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { AdminUpdateUserDto } from "./dto/admin-update-user.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt.authguard";
@@ -40,7 +41,7 @@ export class UsersController {
 
     @Patch(':id')
     @UseGuards(JwtAuthGuard, AdminAuthGuard)
-    update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateUserDto) {
+    update(@Param('id', ParseIntPipe) id: number, @Body() dto: AdminUpdateUserDto) {
         return this.usersService.update(id, dto);
     }
 
