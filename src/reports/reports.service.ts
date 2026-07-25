@@ -5,25 +5,67 @@ import { ExportUsersQueryDto } from './dto/export-users-query.dto';
 import { ExportProfessionalsQueryDto } from './dto/export-professionals-query.dto';
 import { ExportBusinessesQueryDto } from './dto/export-businesses-query.dto';
 
-// key = what the admin UI's column-selection checkboxes send.
+// key = what the admin UI's column-selection checkboxes send. Covers every column on the
+// Professional model (see prisma/schema.prisma) except `deletedAt` (the query already filters
+// `deletedAt: null`, so it's always empty here) — FK columns (`lastEducationId`/`industryId`)
+// are resolved to their looked-up name rather than exported as a raw id, matching
+// ViewProfessionalSheet's "Last education"/"Industry" fields in the admin UI.
 const PROFESSIONAL_COLUMNS: Record<string, { header: string; width: number; accessor: (p: any) => unknown }> = {
+  id: { header: 'ID', width: 8, accessor: (p) => p.id },
+  isVerified: { header: 'Verified', width: 10, accessor: (p) => p.isVerified },
+  registerFor: { header: 'Register For', width: 14, accessor: (p) => p.registerFor },
   name: { header: 'Name', width: 24, accessor: (p) => p.name },
-  companyName: { header: 'Company Name', width: 24, accessor: (p) => p.employer },
-  industry: { header: 'Industry', width: 20, accessor: (p) => p.industry?.name ?? p.otherIndustry },
-  jobTitle: { header: 'Job Title', width: 20, accessor: (p) => p.jobTitle },
-  yearsOfExperience: { header: 'Experience (years)', width: 16, accessor: (p) => p.yearsOfExperience },
+  email: { header: 'Email', width: 26, accessor: (p) => p.email },
+  contactNumber: { header: 'Contact Number', width: 18, accessor: (p) => p.contactNumber },
+  shouldNumberVisible: { header: 'Number Visible In Search', width: 14, accessor: (p) => p.shouldNumberVisible },
+  gender: { header: 'Gender', width: 10, accessor: (p) => p.gender },
+  dateOfBirth: { header: 'Date of Birth', width: 16, accessor: (p) => p.dateOfBirth },
   churchName: { header: 'Church Name', width: 24, accessor: (p) => p.churchName },
+  churchArea: { header: 'Church Area', width: 20, accessor: (p) => p.churchArea },
   city: { header: 'City', width: 16, accessor: (p) => p.city },
+  lastEducation: { header: 'Last Education', width: 20, accessor: (p) => p.education?.name },
+  lastDegreeName: { header: 'Last Degree Name', width: 22, accessor: (p) => p.lastDegreeName },
+  lastInstituteAttended: { header: 'Last Institute Attended', width: 26, accessor: (p) => p.lastInstituteAttended },
+  isEmployed: { header: 'Employed', width: 10, accessor: (p) => p.isEmployed },
+  occupation: { header: 'Occupation', width: 20, accessor: (p) => p.occupation },
+  industry: { header: 'Industry', width: 20, accessor: (p) => p.industry?.name ?? p.otherIndustry },
+  otherIndustry: { header: 'Other Industry', width: 20, accessor: (p) => p.otherIndustry },
+  jobTitle: { header: 'Job Title', width: 20, accessor: (p) => p.jobTitle },
+  companyName: { header: 'Company Name', width: 24, accessor: (p) => p.employer },
+  yearsOfExperience: { header: 'Experience (years)', width: 16, accessor: (p) => p.yearsOfExperience },
+  lastEmployer1: { header: 'Previous Employer 1', width: 22, accessor: (p) => p.lastEmployer1 },
+  lastEmployer2: { header: 'Previous Employer 2', width: 22, accessor: (p) => p.lastEmployer2 },
+  lastEmployer3: { header: 'Previous Employer 3', width: 22, accessor: (p) => p.lastEmployer3 },
+  residentialAddress: { header: 'Residential Address', width: 30, accessor: (p) => p.residentialAddress },
+  residentialArea: { header: 'Residential Area', width: 20, accessor: (p) => p.residentialArea },
+  linkedInUrl: { header: 'LinkedIn URL', width: 30, accessor: (p) => p.linkedInUrl },
+  notes: { header: 'Notes', width: 30, accessor: (p) => p.notes },
+  createdById: { header: 'Created By (User ID)', width: 14, accessor: (p) => p.createdById },
+  createdAt: { header: 'Created At', width: 22, accessor: (p) => p.createdAt },
+  updatedAt: { header: 'Updated At', width: 22, accessor: (p) => p.updatedAt },
 };
 
+// Same idea as PROFESSIONAL_COLUMNS above, covering every column on the Business model.
 const BUSINESS_COLUMNS: Record<string, { header: string; width: number; accessor: (b: any) => unknown }> = {
+  id: { header: 'ID', width: 8, accessor: (b) => b.id },
+  isVerified: { header: 'Verified', width: 10, accessor: (b) => b.isVerified },
+  registerFor: { header: 'Register For', width: 14, accessor: (b) => b.registerFor },
   ownerName: { header: 'Owner Name', width: 24, accessor: (b) => b.ownerName },
   businessType: { header: 'Business Type', width: 20, accessor: (b) => b.businessType },
   yearsOfExperience: { header: 'Experience (years)', width: 16, accessor: (b) => b.yearsOfExperience },
+  dateOfBirth: { header: 'Date of Birth', width: 16, accessor: (b) => b.dateOfBirth },
+  email: { header: 'Email', width: 26, accessor: (b) => b.email },
+  contactNumber: { header: 'Contact Number', width: 18, accessor: (b) => b.contactNumber },
   city: { header: 'City', width: 16, accessor: (b) => b.city },
   residentialArea: { header: 'Residential Area', width: 20, accessor: (b) => b.residentialArea },
-  contactNumber: { header: 'Contact Number', width: 18, accessor: (b) => b.contactNumber },
-  email: { header: 'Email', width: 26, accessor: (b) => b.email },
+  website: { header: 'Website', width: 26, accessor: (b) => b.website },
+  fbPage: { header: 'Facebook Page', width: 26, accessor: (b) => b.fbPage },
+  instaPage: { header: 'Instagram Page', width: 26, accessor: (b) => b.instaPage },
+  linkedInUrl: { header: 'LinkedIn URL', width: 30, accessor: (b) => b.linkedInUrl },
+  notes: { header: 'Notes', width: 30, accessor: (b) => b.notes },
+  createdById: { header: 'Created By (User ID)', width: 14, accessor: (b) => b.createdById },
+  createdAt: { header: 'Created At', width: 22, accessor: (b) => b.createdAt },
+  updatedAt: { header: 'Updated At', width: 22, accessor: (b) => b.updatedAt },
 };
 
 // Distinct-value lookups back the admin Reports page's filter dropdowns — every option shown is
@@ -131,7 +173,7 @@ export class ReportsService {
           ],
         }),
       },
-      include: { industry: true },
+      include: { industry: true, education: true },
       orderBy: { createdAt: 'desc' },
     });
 
