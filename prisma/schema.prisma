@@ -78,33 +78,31 @@ enum UserRole {
 
 model Professional {
     id                          Int @id @default(autoincrement())
-    registerFor                 RegisterFor
     name                        String
-    email                       String
+    email                       String?
     contactNumber               String
     shouldNumberVisible         Boolean
     gender                      Gender
     churchName                  String
     churchArea                  String
     city                        String
-    lastEducationId             Int
+    lastEducationId             Int?
     lastDegreeName              String?
     lastInstituteAttended       String?
     isEmployed                  Boolean
     occupation                  String
-    industryId                  Int?
+    industryId                  Int
     otherIndustry               String?
-    jobTitle                    String?
-    employer                    String?
-    yearsOfExperience           String
+    jobTitle                    String
+    employer                    String
+    yearsOfExperience           String?
     lastEmployer1               String?
     lastEmployer2               String?
     lastEmployer3               String?
-    residentialAddress          String
     residentialArea             String
     linkedInUrl                 String?
     notes                       String?
-    dateOfBirth                 String
+    dateOfBirth                 String?
     isVerified                  Boolean @default(false)
     createdById                 Int
 
@@ -113,8 +111,8 @@ model Professional {
     deletedAt       DateTime?
 
     createdByUser      User      @relation(fields: [createdById], references: [id], onDelete: Cascade)
-    education      Education      @relation(fields: [lastEducationId], references: [id])
-    industry       Industry?       @relation(fields: [industryId], references: [id])
+    education      Education?      @relation(fields: [lastEducationId], references: [id])
+    industry       Industry       @relation(fields: [industryId], references: [id])
 
     @@map("professional")
 }

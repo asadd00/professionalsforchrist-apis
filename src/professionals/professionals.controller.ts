@@ -7,7 +7,6 @@ import { JwtAuthGuard } from "../auth/jwt.authguard";
 import { SearchQueryDto } from "../search/dto/search-query.dto";
 import { AdminAuthGuard } from "src/auth/admin.authguard";
 import { ResponseMessage } from "src/common/decorators/response-message.decorator";
-import { RegisterFor } from "@prisma/client";
 
 @Controller('professionals')
 @UseGuards(JwtAuthGuard)
@@ -22,7 +21,7 @@ export class ProfessionalsController {
         @Body() dto: CreateProfessionalDto
     ) {
         const existing = await this.professionalService.findForSelf(userId);
-        if(existing && dto.registerFor == RegisterFor.self) throw new ConflictException('Form alreay exists for yourself');
+        if(existing) throw new ConflictException('Form already exists for yourself');
 
         return this.professionalService.create({ ...dto, createdById: userId });
     }

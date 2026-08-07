@@ -13,7 +13,6 @@ import { ExportBusinessesQueryDto } from './dto/export-businesses-query.dto';
 const PROFESSIONAL_COLUMNS: Record<string, { header: string; width: number; accessor: (p: any) => unknown }> = {
   id: { header: 'ID', width: 8, accessor: (p) => p.id },
   isVerified: { header: 'Verified', width: 10, accessor: (p) => p.isVerified },
-  registerFor: { header: 'Register For', width: 14, accessor: (p) => p.registerFor },
   name: { header: 'Name', width: 24, accessor: (p) => p.name },
   email: { header: 'Email', width: 26, accessor: (p) => p.email },
   contactNumber: { header: 'Contact Number', width: 18, accessor: (p) => p.contactNumber },
@@ -36,7 +35,6 @@ const PROFESSIONAL_COLUMNS: Record<string, { header: string; width: number; acce
   lastEmployer1: { header: 'Previous Employer 1', width: 22, accessor: (p) => p.lastEmployer1 },
   lastEmployer2: { header: 'Previous Employer 2', width: 22, accessor: (p) => p.lastEmployer2 },
   lastEmployer3: { header: 'Previous Employer 3', width: 22, accessor: (p) => p.lastEmployer3 },
-  residentialAddress: { header: 'Residential Address', width: 30, accessor: (p) => p.residentialAddress },
   residentialArea: { header: 'Residential Area', width: 20, accessor: (p) => p.residentialArea },
   linkedInUrl: { header: 'LinkedIn URL', width: 30, accessor: (p) => p.linkedInUrl },
   notes: { header: 'Notes', width: 30, accessor: (p) => p.notes },

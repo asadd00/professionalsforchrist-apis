@@ -9,21 +9,14 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { RegisterFor, Gender } from '@prisma/client';
+import { Gender } from '@prisma/client';
 
 export class CreateProfessionalDto {
   /* ---------- BASIC INFO ---------- */
 
-  @IsEnum(RegisterFor)
-  registerFor: RegisterFor;
-
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
 
   @IsString()
   @IsNotEmpty()
@@ -35,9 +28,14 @@ export class CreateProfessionalDto {
   @IsEnum(Gender)
   gender: Gender;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  dateOfBirth: string;
+  dateOfBirth?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
 
   @IsOptional()
   @Type(() => Number)
@@ -60,10 +58,11 @@ export class CreateProfessionalDto {
 
   /* ---------- EDUCATION ---------- */
 
+  @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  lastEducationId: number;
+  lastEducationId?: number;
 
   @IsString()
   @IsOptional()
@@ -86,26 +85,26 @@ export class CreateProfessionalDto {
 
   @Type(() => Number)
   @IsInt()
-  @IsOptional()
-  industryId?: number;
+  @Min(1)
+  industryId: number;
 
   @IsString()
   @IsOptional()
   otherIndustry?: string
 
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  jobTitle?: string;
-
-  @IsOptional()
-  @IsString()
-  employer?: string;
+  jobTitle: string;
 
   @IsString()
   @IsNotEmpty()
-  yearsOfExperience: string;
-  
+  employer: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  yearsOfExperience?: string;
+
   @IsOptional()
   @IsString()
   lastEmployer1?: string;
@@ -119,10 +118,6 @@ export class CreateProfessionalDto {
   lastEmployer3?: string;
 
   /* ---------- ADDRESS ---------- */
-
-  @IsString()
-  @IsNotEmpty()
-  residentialAddress: string;
 
   @IsString()
   @IsNotEmpty()

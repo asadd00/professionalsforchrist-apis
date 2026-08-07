@@ -9,14 +9,10 @@ import {
   IsNotEmpty,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { RegisterFor, Gender } from '@prisma/client';
+import { Gender } from '@prisma/client';
 
 export class UpdateProfessionalDto {
   /* ---------- BASIC INFO ---------- */
-
-  @IsOptional()
-  @IsEnum(RegisterFor)
-  registerFor?: RegisterFor;
 
   @IsOptional()
   @IsString()
@@ -25,7 +21,6 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsEmail()
-  @IsNotEmpty()
   email?: string;
 
   @IsOptional()
@@ -44,7 +39,7 @@ export class UpdateProfessionalDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  dateOfBirth: string;
+  dateOfBirth?: string;
 
   /* ---------- CHURCH INFO ---------- */
 
@@ -109,12 +104,13 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsString()
+  @IsNotEmpty()
   employer?: string;
 
   @IsOptional()
   @IsNotEmpty()
   @IsString()
-  yearsOfExperience: string;
+  yearsOfExperience?: string;
 
   @IsOptional()
   @IsString()
@@ -129,11 +125,6 @@ export class UpdateProfessionalDto {
   lastEmployer3?: string;
 
   /* ---------- ADDRESS ---------- */
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  residentialAddress?: string;
 
   @IsOptional()
   @IsString()
