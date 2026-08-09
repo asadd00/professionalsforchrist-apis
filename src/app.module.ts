@@ -12,6 +12,7 @@ import { CommunityLeadersModule } from './community-leaders/community-leaders.mo
 import { PrayerRequestsModule } from './prayer-requests/prayer-requests.module';
 import { EducationFundModule } from './education-fund/education-fund.module';
 import { ReportsModule } from './reports/reports.module';
+import { PodcastModule } from './podcast/podcast.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { ReportsModule } from './reports/reports.module';
     CommunityLeadersModule,
     PrayerRequestsModule,
     EducationFundModule,
-    ReportsModule
+    ReportsModule,
+    PodcastModule,
   ],
 })
 export class AppModule {}

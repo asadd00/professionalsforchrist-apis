@@ -279,3 +279,12 @@ model EducationFund {
 
     @@map("education_fund")
 }
+
+model PodcastSettings {
+    id          Int @id @default(autoincrement())
+    youtubeUrl  String?
+
+    updatedAt   DateTime @updatedAt
+
+    @@map("podcast_settings")
+}
