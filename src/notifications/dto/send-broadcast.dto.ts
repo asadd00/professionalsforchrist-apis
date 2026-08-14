@@ -12,4 +12,8 @@ export class SendBroadcastDto {
   @IsOptional()
   @IsString()
   imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string;
 }

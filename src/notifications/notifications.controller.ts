@@ -45,7 +45,12 @@ export class NotificationsController {
   @UseGuards(AdminAuthGuard)
   @ResponseMessage('Notification sent')
   sendBroadcast(@Body() dto: SendBroadcastDto) {
-    return this.notificationsService.sendToAll({ title: dto.title, body: dto.body, imageUrl: dto.imageUrl });
+    return this.notificationsService.sendToAll({
+      title: dto.title,
+      body: dto.body,
+      imageUrl: dto.imageUrl,
+      youtubeUrl: dto.youtubeUrl,
+    });
   }
 
   // Separate from `sendBroadcast` since it accepts multipart/form-data, not JSON — the admin

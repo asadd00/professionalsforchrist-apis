@@ -43,11 +43,12 @@ model User {
 }
 
 model Notification {
-    id        Int @id @default(autoincrement())
-    title     String
-    body      String
-    imageUrl  String?
-    userId    Int? // null = broadcast, visible to every user
+    id         Int @id @default(autoincrement())
+    title      String
+    body       String
+    imageUrl   String?
+    youtubeUrl String?
+    userId     Int? // null = broadcast, visible to every user
 
     createdAt DateTime @default(now())
 

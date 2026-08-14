@@ -11,6 +11,7 @@ export type NotificationPayload = {
   title: string;
   body: string;
   imageUrl?: string;
+  youtubeUrl?: string;
   data?: Record<string, string>;
 };
 
@@ -94,7 +95,13 @@ export class NotificationsService {
 
   async sendToUser(userId: number, payload: NotificationPayload) {
     await this.prisma.notification.create({
-      data: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl, userId },
+      data: {
+        title: payload.title,
+        body: payload.body,
+        imageUrl: payload.imageUrl,
+        youtubeUrl: payload.youtubeUrl,
+        userId,
+      },
     });
 
     const tokens = await this.prisma.deviceToken.findMany({
@@ -107,7 +114,13 @@ export class NotificationsService {
 
   async sendToAll(payload: NotificationPayload) {
     await this.prisma.notification.create({
-      data: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl, userId: null },
+      data: {
+        title: payload.title,
+        body: payload.body,
+        imageUrl: payload.imageUrl,
+        youtubeUrl: payload.youtubeUrl,
+        userId: null,
+      },
     });
 
     const tokens = await this.prisma.deviceToken.findMany({ select: { token: true } });
@@ -142,6 +155,7 @@ export class NotificationsService {
         title: n.title,
         body: n.body,
         imageUrl: n.imageUrl,
+        youtubeUrl: n.youtubeUrl,
         createdAt: n.createdAt,
         isRead: n.reads.length > 0,
       })),
@@ -175,10 +189,25 @@ export class NotificationsService {
     for (let i = 0; i < tokens.length; i += FCM_MULTICAST_BATCH_SIZE) {
       const batch = tokens.slice(i, i + FCM_MULTICAST_BATCH_SIZE);
 
+      // Data-only (no top-level `notification` field) so the message never auto-displays —
+      // the mobile app builds the notification itself in every app state (foreground,
+      // background, killed) via flutter_local_notifications, which is what lets it use
+      // BigTextStyle/BigPictureStyle for a working expand/down-arrow. FCM `data` values must
+      // all be strings, so imageUrl is only included when actually present.
       const response = await messaging.sendEachForMulticast({
         tokens: batch,
-        notification: { title: payload.title, body: payload.body, imageUrl: payload.imageUrl },
-        data: payload.data,
+        data: {
+          ...payload.data,
+          title: payload.title,
+          body: payload.body,
+          ...(payload.imageUrl ? { imageUrl: payload.imageUrl } : {}),
+          ...(payload.youtubeUrl ? { youtubeUrl: payload.youtubeUrl } : {}),
+        },
+        android: { priority: 'high' },
+        apns: {
+          headers: { 'apns-priority': '5' },
+          payload: { aps: { contentAvailable: true } },
+        },
       });
 
       const staleTokens = response.responses

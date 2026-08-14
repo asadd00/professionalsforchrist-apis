@@ -103,6 +103,7 @@ export class CreateProfessionalDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   yearsOfExperience?: string;
 
   @IsOptional()
