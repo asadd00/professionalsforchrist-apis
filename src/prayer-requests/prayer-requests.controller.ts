@@ -35,17 +35,10 @@ export class PrayerRequestsController {
   async markPrayed(@Param('id', ParseIntPipe) id: number) {
     const updated = await this.prayerRequestsService.markPrayed(id);
 
-    if (updated.isAnonymous) {
-      await this.notificationsService.sendToUser(updated.createdById, {
-        title: 'Your prayer request has been prayed for',
-        body: 'An admin has prayed for the request you submitted.',
-      });
-    } else {
-      await this.notificationsService.sendToAll({
-        title: 'A prayer request has been prayed for',
-        body: 'One of the community\'s prayer requests has been prayed for.',
-      });
-    }
+    await this.notificationsService.sendToUser(updated.createdById, {
+      title: 'Your prayer request has been prayed for',
+      body: 'An admin has prayed for the request you submitted.',
+    });
 
     return updated;
   }

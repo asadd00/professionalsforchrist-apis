@@ -5,6 +5,12 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 async function bootstrap() {
+  // Force UTC regardless of the host/.env TZ setting so Node's interpretation of
+  // Postgres "timestamp without time zone" columns matches how they were written
+  // (Postgres itself defaults to UTC) — otherwise timestamps read back get shifted
+  // by the local offset (e.g. a notification's createdAt showing hours off in the app).
+  process.env.TZ = 'UTC';
+
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({whitelist: true}));
   app.setGlobalPrefix('api/v1');
