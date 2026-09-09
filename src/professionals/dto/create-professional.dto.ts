@@ -31,10 +31,12 @@ export class CreateProfessionalDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   dateOfBirth?: string;
 
   @IsOptional()
   @IsEmail()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   email?: string;
 
   @IsOptional()

@@ -21,6 +21,7 @@ export class UpdateProfessionalDto {
 
   @IsOptional()
   @IsEmail()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   email?: string;
 
   @IsOptional()
@@ -39,6 +40,7 @@ export class UpdateProfessionalDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  @Transform(({ value }) => (value === '' ? undefined : value))
   dateOfBirth?: string;
 
   /* ---------- CHURCH INFO ---------- */
